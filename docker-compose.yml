@@ -1,0 +1,24 @@
+version: '3.7'
+services:
+  error_map_reduce:
+    build:
+      context: ./error_map_reduce
+      dockerfile: Dockerfile
+    image: error_map_reduce:v1
+    user: root
+    restart: always
+    deploy:
+      replicas: 1
+    volumes:
+      - ./error_output:/output
+  map_reduce:
+    build:
+      context: ./map_reduce
+      dockerfile: Dockerfile
+    image: map_reduce:v1
+    user: root
+    restart: always
+    deploy:
+      replicas: 1
+    volumes:
+      - ./output:/output
