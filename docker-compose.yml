@@ -10,7 +10,7 @@ services:
     deploy:
       replicas: 1
     volumes:
-      - ./error_output:/output
+      - error_output:/output
   map_reduce:
     build:
       context: ./map_reduce
@@ -21,4 +21,19 @@ services:
     deploy:
       replicas: 1
     volumes:
-      - ./output:/output
+      - output:/output
+  general_reduce:
+    build:
+      context: ./general_reduce
+      dockerfile: Dockerfile
+    image: general_reducer:v1
+    user: root
+    restart: always
+    depends_on:
+      - error_map_reduce
+      - map_reduce
+    deploy:
+      replicas: 1
+    volumes_from:
+      - error_map_reduce
+      - map_reduce

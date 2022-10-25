@@ -37,7 +37,7 @@ func main() {
 				continue
 			}
 
-			time := (day-1)*86400 + sec
+			time := ((day-1)*86400 + sec) / 300
 
 			fmt.Printf("%v\t%v\t%.7f\n", day, time, speed)
 		} else {

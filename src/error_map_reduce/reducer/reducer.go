@@ -8,15 +8,7 @@ import (
 	"strings"
 )
 
-var (
-	time  = int64(0)
-	speed = float64(0)
-	count = int64(0)
-)
-
 var ram = make(map[string]int)
-var ram_count = make(map[string]int)
-var max = 0
 
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
@@ -39,7 +31,7 @@ func main() {
 	}
 
 	for key := range ram {
-		fmt.Printf("%s - %v\n", key, ram[key])
+		fmt.Printf("error\t%s\t%v\n", key, ram[key])
 	}
 
 	if err := scanner.Err(); err != nil {
