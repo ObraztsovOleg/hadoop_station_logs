@@ -1,4 +1,4 @@
-BUILD_DIR="../../bin"
+BUILD_DIR="../bin"
 
 build:
 	go mod init reducer.go
