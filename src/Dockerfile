@@ -11,4 +11,4 @@ COPY ./h_map_reduce/bin/* /map_reduce/
 ADD run.sh /run.sh
 RUN chmod a+x /run.sh
 
-CMD ["/run.sh"]
+CMD ["bash", "./run.sh"]
