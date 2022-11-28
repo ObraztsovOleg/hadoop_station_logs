@@ -61,29 +61,34 @@ func main() {
 		}
 	}
 
-	keys := make([]string, 0, len(ram_error))
+	keys := make([]int, 0, len(ram_error))
 	for k := range ram_error {
-		keys = append(keys, k)
+		enum, err := strconv.Atoi(k)
+		if err != nil {
+			continue
+		}
+		keys = append(keys, enum)
 	}
-	sort.Strings(keys)
+	sort.Sort(sort.IntSlice(keys))
 
 	var prev_error int64 = 0
 
 	for _, key := range keys {
-		// fmt.Println(key, ram_error[key], ram_speed[key])
-		avg_error = avg_error + float64(ram_error[key])
-		avg_speed = avg_speed + ram_speed[key]
+		s := strconv.Itoa(key)
+		avg_error = avg_error + float64(ram_error[s])
+		avg_speed = avg_speed + ram_speed[s]
 
-		var dirivative float64 = float64(int64(ram_error[key])-prev_error) / float64(300)
+		var dirivative = int64(ram_error[s]) - prev_error
 
-		if dirivative > 0.0 {
-			// fmt.Println(ram_error[key], prev_error)
-			avg_rerror = avg_rerror + float64(ram_error[key])
-			avg_rspeed = avg_rspeed + ram_speed[key]
+		if dirivative > 0 {
+			avg_rerror = avg_rerror + float64(ram_error[s])
+			avg_rspeed = avg_rspeed + ram_speed[s]
 			rcount = rcount + 1
 		}
-		prev_error = int64(ram_error[key])
+		prev_error = int64(ram_error[s])
 	}
+
+	prev_error = 0
 
 	// fmt.Println(rcount, avg_rspeed, avg_rerror)
 	avg_error = avg_error / float64(len(ram_error))
@@ -92,20 +97,23 @@ func main() {
 	avg_rspeed = avg_rspeed / float64(rcount)
 
 	for _, key := range keys {
-		sum_mult = sum_mult + (float64(ram_error[key])-avg_error)*(ram_speed[key]-avg_speed)
-		speed_sum_sq = speed_sum_sq + (ram_speed[key]-avg_speed)*(ram_speed[key]-avg_speed)
-		error_sum_sq = error_sum_sq + (float64(ram_error[key])-avg_error)*(float64(ram_error[key])-avg_error)
+		s := strconv.Itoa(key)
+		sum_mult = sum_mult + (float64(ram_error[s])-avg_error)*(ram_speed[s]-avg_speed)
+		speed_sum_sq = speed_sum_sq + (ram_speed[s]-avg_speed)*(ram_speed[s]-avg_speed)
+		error_sum_sq = error_sum_sq + (float64(ram_error[s])-avg_error)*(float64(ram_error[s])-avg_error)
 
-		var dirivative float64 = float64(int64(ram_error[key])-prev_error) / float64(300)
+		var dirivative = int64(ram_error[s]) - prev_error
 
-		if dirivative > 0.0 {
-			error_sum = error_sum + float64(ram_error[key])
-			weighted_speed = weighted_speed + float64(ram_error[key])*ram_speed[key]
-			rspeed_sum_sq = rspeed_sum_sq + (ram_speed[key]-avg_rspeed)*(ram_speed[key]-avg_rspeed)
+		if dirivative > 0 {
+			fmt.Println(key, ram_error[s], prev_error)
+			error_sum = error_sum + float64(ram_error[s])
+			weighted_speed = weighted_speed + float64(ram_error[s])*ram_speed[s]
+			rspeed_sum_sq = rspeed_sum_sq + (ram_speed[s]-avg_rspeed)*(ram_speed[s]-avg_rspeed)
 		}
-		prev_error = int64(ram_error[key])
+		prev_error = int64(ram_error[s])
 	}
 
+	fmt.Println(error_sum)
 	standart_deviation = math.Pow(rspeed_sum_sq/float64(rcount), 1.0/2)
 
 	fmt.Printf("correlation cooficient: %f\nweighted average: %f\nconfidence interval:\n\t-min: %f\n\t-max: %f\n",
