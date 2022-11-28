@@ -105,7 +105,6 @@ func main() {
 		var dirivative = int64(ram_error[s]) - prev_error
 
 		if dirivative > 0 {
-			fmt.Println(key, ram_error[s], prev_error)
 			error_sum = error_sum + float64(ram_error[s])
 			weighted_speed = weighted_speed + float64(ram_error[s])*ram_speed[s]
 			rspeed_sum_sq = rspeed_sum_sq + (ram_speed[s]-avg_rspeed)*(ram_speed[s]-avg_rspeed)
